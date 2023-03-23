@@ -38,7 +38,7 @@ public class PlayerMovement : MonoBehaviour
     }
     private void OnCollisionExit2D(Collision2D other) {
         if (other.gameObject.CompareTag("Ground")){
-            isJumping = true;
+            // isJumping = true;
         }
     }
 }

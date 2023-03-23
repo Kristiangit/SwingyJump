@@ -7,9 +7,13 @@ public class PlayerSwing : MonoBehaviour
 
     public DistanceJoint2D SwingJoint;
     public int sqCount = 0;
+    public int sqSwung = 0;
+    public GameObject sqPrefab;
+    private int maxDistance = 12;
     // Start is called before the first frame update
     void Start()
     {
+        sqPrefab = Resources.Load("Prefabs/Square") as GameObject;
         SwingJoint = GetComponent<DistanceJoint2D>();
         SwingJoint.enabled = false;
     }
@@ -19,16 +23,19 @@ public class PlayerSwing : MonoBehaviour
     {
         if (Input.GetKeyDown("r")){
             SwingJoint.enabled = true;
-        }
-        if (Input.GetKeyDown("f")){
-            
-            GameObject newObject = Instantiate(Resources.Load("/Prefabs/Square.prefab") as GameObject, new Vector2(gameObject.transform.position.x + 12f, 4f), Quaternion.identity);
+            Debug.Log(SwingJoint.distance);
+            if (SwingJoint.distance <= maxDistance){
+                Debug.Log("enabled");
+                SwingJoint.breakForce = 200;
 
-            gameObject.AddComponent<DistanceJoint2D>(); 
-            SwingJoint = GetComponent<DistanceJoint2D>();
-            SwingJoint.breakForce = 400;
-            SwingJoint.connectedBody = newObject.GetComponent<Rigidbody2D>();
+            } else {
+                SwingJoint.enabled = false;
+            }
+        
         }
+
+
+        // }
         if (Input.GetKeyDown("2")){
             if (Time.timeScale == 0){
                 Time.timeScale = 1;
@@ -36,5 +43,12 @@ public class PlayerSwing : MonoBehaviour
             Time.timeScale = 0;
             }
         }
+    }
+    private void OnJointBreak(float breakForce) {
+        gameObject.AddComponent<DistanceJoint2D>(); 
+        SwingJoint = GetComponent<DistanceJoint2D>();
+        SwingJoint.enabled = false;
+        // SwingJoint.connectedBody = newObject.GetComponent<Rigidbody2D>();
+        
     }
 }
